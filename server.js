@@ -8,6 +8,18 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
+const allowedOriginsString = process.env.CORS_ORIGIN;
+const allowedOrigins = allowedOriginsString ? allowedOriginsString.split(',').map(s => s.trim()) : [];
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
 app.use(bodyParser.json());
 
 // Routes
