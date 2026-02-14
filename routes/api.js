@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { MOCK_APPS, installedApps, timelineEvents, resetSimulation } = require("../data/store");
+import { MOCK_APPS, installedApps, timelineEvents, resetSimulation } from "../data/store.js";
 
 // ------------------------------------------------------------------
 // HELPERS
@@ -223,4 +223,4 @@ router.post("/reset", (req, res) => {
     res.json({ message: "Simulation reset." });
 });
 
-module.exports = router;
+export default router;
