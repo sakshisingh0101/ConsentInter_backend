@@ -12,11 +12,25 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOriginsString = process.env.CORS_ORIGIN;
 const allowedOrigins = allowedOriginsString ? allowedOriginsString.split(',').map(s => s.trim()) : [];
+
+// Add production frontend URL and local dev URLs explicitly for POC
+const trustedOrigins = [
+    "https://consent-intel.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:5174"
+];
+
+const allAllowedOrigins = [...new Set([...allowedOrigins, ...trustedOrigins])];
+
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        if (allAllowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
+            console.log("Blocked by CORS:", origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
